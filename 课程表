@@ -1,0 +1,42 @@
+bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize) 
+{
+    int same[prerequisitesSize];//先修课程同时作为后修课程的表
+    int closed[prerequisitesSize];//已验same课程表
+    int samedex=0,closedex=0;
+    for(int i=0;i<prerequisitesColSize;i++)
+    {
+        int j=0;
+        while(j<prerequisitesColSize)
+        {
+            if(prerequisites[i][1]==prerequisites[j][0])
+            {
+                same[samedex]=prerequisites[i][1];
+                samedex++;
+            }
+            j++;
+        }
+    }//输出same表，same表的大小samedex
+    int function1(int a)
+    {
+        for(int j=0;j<closedex;j++)
+        {
+            if(a==closed[j])
+            return 0;
+        }
+        for(int i=0;i<prerequisitesColSize;i++)
+        {
+            if(a==prerequisites[i][0])
+            return function1(prerequisites[i][1]);
+        }
+        return 1;
+    }
+    for(int i=0;i<samedex;i++)
+    {        
+        int output=function1(same[i]);//将same表中数据与prerequisites数组中数据逐一比较，即找到作为先修课程的后修课程的先修课程
+        if(output==0)
+        return 0;
+        closed[i]=same[i];
+        closedex++;
+    }
+    return 1;
+}
